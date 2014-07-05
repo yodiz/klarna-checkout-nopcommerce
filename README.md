@@ -1,4 +1,4 @@
-Klarna Checkout Nopcommerce
+Klarna Checkout nopCommerce
 ===========================
 För att börja använda det gör ni följande:
  

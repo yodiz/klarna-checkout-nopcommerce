@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "";
+}
+@model Majako.Plugin.Payments.KlarnaCheckout.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EId)
+                @Html.ValidationMessageFor(model => model.EId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SharedSecret):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SharedSecret)
+                @Html.ValidationMessageFor(model => model.SharedSecret)
+            </td>
+        </tr> 
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CheckoutUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CheckoutUrl)
+                @Html.ValidationMessageFor(model => model.CheckoutUrl)
+            </td>
+        </tr> 
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TermsUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TermsUrl)
+                @Html.ValidationMessageFor(model => model.TermsUrl)
+            </td>
+        </tr> 
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TestMode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TestMode)
+                @Html.ValidationMessageFor(model => model.TestMode)
+            </td>
+        </tr> 
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PlaceOrderToRegisteredAccount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PlaceOrderToRegisteredAccount)
+                @Html.ValidationMessageFor(model => model.PlaceOrderToRegisteredAccount)
+            </td>
+        </tr> 
+        <tr>
+            <td colspan="2" width="100%">
+                <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+}

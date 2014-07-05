@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "";
+
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/app/checkout/kcoRepo.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/app/checkout/shippingMethodRepo.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/app/checkout/checkoutCtrl.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/app/app.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/lib/angular-sanitize.min.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Payments.KlarnaCheckout/Scripts/lib/angular.min.js");
+
+}
+
+<style>
+    #MiniCartWrap {
+        display: none;
+    }
+</style>
+
+<div xmlns:ng="http://angularjs.org" id="ng-app" data-ng-app="klarnaCheckout">
+    <div class="shippingMethod" data-ng-controller="checkoutCtrl as vm">
+        <h3>2. Välj fraktsätt</h3>
+        <div class="checkout-data">
+            <div class="section shipping-method">
+                <ul class="method-list">
+                    <li data-ng-repeat="sm in vm.shippingMethods"
+                        data-ng-click="vm.changeShippingMethod(sm)"
+                        data-ng-class="{success: sm.name == vm.selectedShippingOption}">
+                        <div class="method-name">
+                            <input type="radio"
+                                   name="shippingoption"
+                                   value="{{sm.name}}"
+                                   data-ng-model="vm.selectedShippingOption" />
+                            <label>{{sm.name}} ({{sm.fee}})</label>
+                        </div>
+                        <div class="method-description">{{sm.description}}</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h3>3. Slutför köp</h3>
+        <div class="snippet" data-ng-bind-html="vm.checkoutSnippet"></div>
+    </div>
+</div>

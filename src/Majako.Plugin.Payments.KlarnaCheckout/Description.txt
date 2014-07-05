@@ -1,0 +1,8 @@
+﻿Group: Misc
+FriendlyName: Klarna Checkout
+SystemName: Payments.KlarnaCheckout
+Version: 1.00
+SupportedVersions: 3.20
+Author: Majako AB, Martin Gustafsson
+DisplayOrder: 1
+FileName: Majako.Plugin.Payments.KlarnaCheckout.dll

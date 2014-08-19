@@ -4,10 +4,11 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Nop.Web.Controllers;
+using Nop.Web.Framework.Controllers;
 
 namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
 {
-    public class JsonController : BaseNopController
+    public class JsonController : BasePluginController
     {
         protected new ActionResult Json(object data, JsonRequestBehavior behavior = JsonRequestBehavior.DenyGet)
         {

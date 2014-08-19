@@ -60,9 +60,6 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
         private readonly IRepository<KcoOrderRequest> _kcoOrderRequestRepository;
         private readonly ICountryService _countryService;
 
-        #region Fields
-
-        #endregion
 
         #region Constructors
 
@@ -124,7 +121,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             model.TestMode = _klarnaCheckoutSettings.TestMode;
             model.PlaceOrderToRegisteredAccount = _klarnaCheckoutSettings.PlaceOrderToRegisteredAccount;
 
-            return View("Majako.Plugin.Payments.KlarnaCheckout.Views.PaymentsKlarnaCheckout.Configure", model);
+            return View("~/Plugins/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -143,13 +140,13 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             _klarnaCheckoutSettings.PlaceOrderToRegisteredAccount = model.PlaceOrderToRegisteredAccount;
             _settingService.SaveSetting(_klarnaCheckoutSettings);
 
-            return View("Majako.Plugin.Payments.KlarnaCheckout.Views.PaymentsKlarnaCheckout.Configure", model);
+            return View("~/Plugins/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
         }
 
         [ChildActionOnly]
         public ActionResult PublicInfo(string widgetZone)
         {
-            return View("PublicInfo");
+            return View("~/Plugins/Views/PaymentsKlarnaCheckout/PublicInfo.cshtml");
         }
 
         [ChildActionOnly]
@@ -339,7 +336,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             if (klarnaOrder.status == "checkout_complete")
             {
                 var model = new KlarnaCheckoutModel { Snippet = klarnaOrder.gui.snippet };
-                return View("ThankYou", model);
+                return View("~/Plugins/Views/PaymentsKlarnaCheckout/ThankYou.cshtml", model);
             }
 
             // Checkout not completed - redirect to cart.

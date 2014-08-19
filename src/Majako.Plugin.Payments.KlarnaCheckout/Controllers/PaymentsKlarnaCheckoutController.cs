@@ -121,7 +121,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             model.TestMode = _klarnaCheckoutSettings.TestMode;
             model.PlaceOrderToRegisteredAccount = _klarnaCheckoutSettings.PlaceOrderToRegisteredAccount;
 
-            return View("~/Plugins/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
+            return View("~/Plugins/Payments.KlarnaCheckout/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -140,13 +140,13 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             _klarnaCheckoutSettings.PlaceOrderToRegisteredAccount = model.PlaceOrderToRegisteredAccount;
             _settingService.SaveSetting(_klarnaCheckoutSettings);
 
-            return View("~/Plugins/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
+            return View("~/Plugins/Payments.KlarnaCheckout/Views/PaymentsKlarnaCheckout/Configure.cshtml", model);
         }
 
         [ChildActionOnly]
         public ActionResult PublicInfo(string widgetZone)
         {
-            return View("~/Plugins/Views/PaymentsKlarnaCheckout/PublicInfo.cshtml");
+            return View("~/Plugins/Payments.KlarnaCheckout/Views/PaymentsKlarnaCheckout/PublicInfo.cshtml");
         }
 
         [ChildActionOnly]
@@ -164,6 +164,30 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
             var model = PrepareShippingMethodModel(cart);
             return PartialView("Majako.Plugin.Payments.KlarnaCheckout.Views.PaymentsKlarnaCheckout.ShippingMethods", model);
         }
+
+        //public static object GetObject(Type myType, object value)
+        //{
+        //    if (myType.IsClass && myType != typeof(string))
+        //    {
+        //        var x = (Dictionary<string,object>)value;
+        //        var obj = Activator.CreateInstance(myType);
+        //        var proeprties = myType.GetProperties();
+        //        foreach (var p in proeprties)
+        //        {
+        //            p.SetValue(obj, GetObject(p.PropertyType, x[p.Name]));
+        //        }
+        //        return obj;
+        //    }
+        //    else
+        //    {
+        //        return System.Convert.ChangeType(value, myType);
+        //    }
+        //}
+
+        //public static T GetObject<T>(object value)
+        //{
+        //    return (T)GetObject(typeof(T), value);
+        //}
 
         public ActionResult CheckoutSnippet()
         {
@@ -199,10 +223,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
 
             var response = _kcoProcessor.Fetch(resourceUri);
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                return new HttpStatusCodeResult(response.StatusCode);
-
-            var klarnaOrder = JsonConvert.DeserializeObject<KlarnaOrder>(response.Data);
+            var klarnaOrder = response;
             return Json(klarnaOrder, JsonRequestBehavior.AllowGet);
         }
 
@@ -302,20 +323,23 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
 
             var response = _kcoProcessor.Fetch(resourceUri);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            var klarnaOrder = response;
+            int orderId;
+            _kcoProcessor.PlaceOrder(klarnaOrder, resourceUri, out orderId);
+            if (orderId > 0)
             {
-                var klarnaOrder = JsonConvert.DeserializeObject<KlarnaOrder>(response.Data);
-                int orderId;
-                _kcoProcessor.PlaceOrder(klarnaOrder, resourceUri, out orderId);
-                if (orderId > 0)
-                {
-                    _kcoProcessor.Acknowledge(resourceUri, orderId); 
-                }
+                _kcoProcessor.Acknowledge(resourceUri, orderId); 
             }
-            else
-            {
-                throw new NopException("Klarna Error. Error deserializing response data.");
-            }
+
+            //if (response.StatusCode == HttpStatusCode.OK)
+            //{
+            //    var klarnaOrder = JsonConvert.DeserializeObject<KlarnaOrder>(response.Data);
+
+            //}
+            //else
+            //{
+            //    throw new NopException("Klarna Error. Error deserializing response data.");
+            //}
         }
 
         public ActionResult ThankYou(string eId, string resourceUri)
@@ -328,15 +352,12 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Controllers
 
             var response = _kcoProcessor.Fetch(resourceUri);
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                return new HttpStatusCodeResult(response.StatusCode);
-
-            var klarnaOrder = JsonConvert.DeserializeObject<KlarnaOrder>(response.Data);
+            var klarnaOrder = response;
 
             if (klarnaOrder.status == "checkout_complete")
             {
                 var model = new KlarnaCheckoutModel { Snippet = klarnaOrder.gui.snippet };
-                return View("~/Plugins/Views/PaymentsKlarnaCheckout/ThankYou.cshtml", model);
+                return View("~/Plugins/Payments.KlarnaCheckout/Views/PaymentsKlarnaCheckout/ThankYou.cshtml", model);
             }
 
             // Checkout not completed - redirect to cart.

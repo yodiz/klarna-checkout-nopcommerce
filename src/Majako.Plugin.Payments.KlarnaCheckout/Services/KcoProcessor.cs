@@ -200,10 +200,10 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
                 ContentType = CONTENT_TYPE
             };
 
-            var response = order.Create(data);
-
-            if (response.StatusCode != HttpStatusCode.Created) return string.Empty;
-            var resourceUri = response.Header("Location");
+            order.Create(data);
+            order.Fetch();
+             
+            var resourceUri = order.Location.ToString();
             var currentCustomer = _workContext.CurrentCustomer;
 
             var kcoOrderRequest = GetKcoOrderRequest(currentCustomer, resourceUri);
@@ -212,7 +212,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
             return resourceUri;
         }
 
-        public IHttpResponse Update(string resourceUri)
+        public void Update(string resourceUri)
         {
             var connector = Connector.Create(SharedSecret);
             var klarnaCart = GetKlarnaCart();
@@ -221,17 +221,22 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
                 ContentType = CONTENT_TYPE
             };
             var data = new Dictionary<string, object> { { "cart", klarnaCart } };
-            return order.Update(data);
+
+            order.Update(data);
         }
 
-        public IHttpResponse Fetch(string resourceUri)
+        public KlarnaOrder Fetch(string resourceUri)
         {
             var connector = Connector.Create(SharedSecret);
             var order = new Order(connector, new Uri(resourceUri))
             {
                 ContentType = CONTENT_TYPE
             };
-            return order.Fetch();
+            order.Fetch();
+
+            string str = Newtonsoft.Json.JsonConvert.SerializeObject(order.Marshal());
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<KlarnaOrder>(str);
         }
 
         public void Acknowledge(string resourceUri, int orderId)

@@ -1,7 +1,7 @@
 ﻿Group: Misc
 FriendlyName: Klarna Checkout
 SystemName: Payments.KlarnaCheckout
-Version: 1.00
+Version: 1.01
 SupportedVersions: 3.40
 Author: Majako AB, Martin Gustafsson
 DisplayOrder: 1

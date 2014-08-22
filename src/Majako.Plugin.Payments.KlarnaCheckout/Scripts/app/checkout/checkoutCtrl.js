@@ -41,7 +41,7 @@
                 updateCartTotals(data);
                 return vm.checkoutSnippet = $sce.trustAsHtml(snippet);
             }, function () {
-                var msg = "<div class=\"alert alert-error\"><strong>Oops!</strong> Kunde inte ladda kassan. <a href='/onepagecheckout'>Klicka här.</a></div>";
+                var msg = "<div class=\"alert alert-error\"><strong>Oops!</strong> Kunde inte ladda kassan.</div>";
                 return vm.checkoutSnippet = $sce.trustAsHtml(msg);
             });
         }

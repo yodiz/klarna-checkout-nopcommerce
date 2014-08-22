@@ -954,7 +954,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
             
             var gui = new Dictionary<string, object>
             {
-                { "layout", (renderFor == RenderForDevice.Mobile ? "mobile" : "dektop") },
+                { "layout", (renderFor == RenderForDevice.Mobile ? "mobile" : "desktop") },
                 {"options", new List<string> {"disable_autofocus"}}
             };
             

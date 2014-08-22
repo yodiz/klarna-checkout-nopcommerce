@@ -7,8 +7,8 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
 {
     public interface IKcoProcessor
     {
-        string Create();
-        void Update(string resourceUri);
+        string Create(RenderForDevice renderFor);
+        void Update(RenderForDevice renderFor, string resourceUri);
         KlarnaOrder Fetch(string resourceUri);
         void Acknowledge(string resourceUri, int orderId);
 

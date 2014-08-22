@@ -46,6 +46,11 @@ using Nop.Services.Events;
 
 namespace Majako.Plugin.Payments.KlarnaCheckout.Services
 {
+    public enum RenderForDevice
+    {
+        Desktop = 1, Mobile = 2
+    }
+
     public class KcoProcessor : IKcoProcessor
     {
         #region Private Fields
@@ -186,12 +191,12 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
         #endregion
 
         #region Public Methods
-        public string Create()
+        public string Create(RenderForDevice renderFor)
         {
             var connector = Connector.Create(SharedSecret);
             var klarnaCart = GetKlarnaCart();
             var merchant = GetMerchantItem(EId);
-            var data = GetCartData(merchant, klarnaCart);
+            var data = GetCartData(merchant, klarnaCart, renderFor);
             var baseUri = BaseUri;
 
             var order = new Order(connector)
@@ -212,15 +217,20 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
             return resourceUri;
         }
 
-        public void Update(string resourceUri)
+        public void Update(RenderForDevice renderFor, string resourceUri)
         {
             var connector = Connector.Create(SharedSecret);
             var klarnaCart = GetKlarnaCart();
+            var merchant = GetMerchantItem(EId);
+            var data = GetCartData(merchant, klarnaCart, renderFor);
+
             var order = new Order(connector, new Uri(resourceUri))
             {
                 ContentType = CONTENT_TYPE
             };
-            var data = new Dictionary<string, object> { { "cart", klarnaCart } };
+            //var data = new Dictionary<string, object> { { "cart", klarnaCart } };
+
+            
 
             order.Update(data);
         }
@@ -921,7 +931,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
                 CreatedOnUtc = DateTime.UtcNow
             };
         }
-        private Dictionary<string, object> GetCartData(Dictionary<string, object> merchant, Dictionary<string, object> klarnaCart)
+        private Dictionary<string, object> GetCartData(Dictionary<string, object> merchant, Dictionary<string, object> klarnaCart, RenderForDevice renderFor)
         {
             var locale = _workContext.WorkingLanguage.LanguageCulture.ToLower();
             var purchaseCountry = "SE";
@@ -944,6 +954,7 @@ namespace Majako.Plugin.Payments.KlarnaCheckout.Services
             
             var gui = new Dictionary<string, object>
             {
+                { "layout", (renderFor == RenderForDevice.Mobile ? "mobile" : "dektop") },
                 {"options", new List<string> {"disable_autofocus"}}
             };
             
